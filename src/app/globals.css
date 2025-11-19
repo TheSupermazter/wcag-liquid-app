@@ -15,18 +15,23 @@
 body {
   color: var(--foreground);
   background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-sans);
 }
 
-/* Liquid Glass Background */
-.liquid-bg {
-  background: linear-gradient(45deg, #312e81, #0e7490, #be185d);
-  background-size: 400% 400%;
-  animation: gradientBG 15s ease infinite;
-  min-height: 100vh;
+@layer utilities {
+  .liquid-bg {
+    background: linear-gradient(-45deg,
+        #273C50,
+        #2B4457,
+        #1F3040,
+        #273C50);
+    background-size: 400% 400%;
+    animation: gradient 15s ease infinite;
+    min-height: 100vh;
+  }
 }
 
-@keyframes gradientBG {
+@keyframes gradient {
   0% {
     background-position: 0% 50%;
   }

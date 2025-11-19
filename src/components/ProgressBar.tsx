@@ -25,7 +25,7 @@ export const ProgressBar: React.FC = () => {
     });
 
     return (
-        <div className="glass-panel rounded-3xl p-6 mb-8">
+        <div className="glass-panel rounded-2xl p-6 mb-8 mx-4">
             <div className="flex justify-between items-end mb-4">
                 <div>
                     <h2 className="text-2xl font-bold text-white">

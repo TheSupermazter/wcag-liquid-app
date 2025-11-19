@@ -23,7 +23,7 @@ export const Checklist: React.FC = () => {
     }
 
     return (
-        <div className="space-y-1">
+        <div className="space-y-1 mx-4">
             {filteredRules.map((rule) => (
                 <ChecklistItem key={rule.id} rule={rule} />
             ))}

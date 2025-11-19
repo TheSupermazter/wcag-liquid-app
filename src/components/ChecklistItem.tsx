@@ -72,7 +72,7 @@ export const ChecklistItem: React.FC<ChecklistItemProps> = ({ rule }) => {
                             onClick={toggleExpand}
                             className="p-2 hover:bg-white/10 rounded-full transition-colors"
                         >
-                            {isExpanded ? <ChevronUp size={20} /> : <Info size={20} className="text-cyan-300" />}
+                            {isExpanded ? <ChevronUp size={20} /> : <Info size={20} color="#FF4459" />}
                         </button>
                     </div>
 
@@ -116,6 +116,6 @@ export const ChecklistItem: React.FC<ChecklistItemProps> = ({ rule }) => {
                     </div>
                 </div>
             </div>
-        </div>
+        </div >
     );
 };

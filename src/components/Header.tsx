@@ -44,12 +44,12 @@ export const Header: React.FC = () => {
 
     const handleExportPDF = () => {
         const doc = new jsPDF();
-        const title = language === 'en' ? 'WCAG Compliance Report' : 'WCAG Nalevingsrapport';
+        const title = language === 'en' ? 'MADE Marketing WCAG Checklist' : 'MADE Marketing WCAG Checklist';
         const site = websiteName ? `Website: ${websiteName}` : '';
         const date = new Date().toLocaleDateString();
 
         // Header
-        doc.setFillColor(49, 46, 129); // Dark Indigo
+        doc.setFillColor(39, 60, 80); // #273C50
         doc.rect(0, 0, 210, 40, 'F');
         doc.setTextColor(255, 255, 255);
         doc.setFontSize(24);
@@ -59,10 +59,16 @@ export const Header: React.FC = () => {
         doc.text(date, 180, 30, { align: 'right' });
 
         // Filter rules based on active levels and roles
+        const levelWeight = { 'A': 1, 'AA': 2, 'AAA': 3 };
+
         const filteredRules = wcagRules.filter(rule =>
             activeLevels.includes(rule.level) &&
             rule.roles.some(role => activeRoles.includes(role))
-        );
+        ).sort((a, b) => {
+            const weightDiff = levelWeight[a.level] - levelWeight[b.level];
+            if (weightDiff !== 0) return weightDiff;
+            return a.refId.localeCompare(b.refId, undefined, { numeric: true });
+        });
 
         // Stats
         const totalRules = filteredRules.length;
@@ -94,13 +100,14 @@ export const Header: React.FC = () => {
                 'Status'
             ]],
             body: tableData,
-            headStyles: { fillColor: [14, 116, 144] }, // Cyan-700
+            headStyles: { fillColor: [43, 68, 87] }, // #2B4457
             alternateRowStyles: { fillColor: [240, 249, 255] },
             styles: { fontSize: 10 },
             columnStyles: {
                 0: { cellWidth: 20 },
+                1: { cellWidth: 'auto' },
                 2: { cellWidth: 20 },
-                3: { cellWidth: 30, fontStyle: 'bold' }
+                3: { cellWidth: 30 }
             },
             didParseCell: (data) => {
                 if (data.section === 'body' && data.column.index === 3) {
@@ -110,20 +117,23 @@ export const Header: React.FC = () => {
             }
         });
 
-        doc.save(`${websiteName || 'wcag-checklist'}-report.pdf`);
+        doc.save(`${websiteName || 'made-marketing-wcag'}-checklist.pdf`);
         setShowExportMenu(false);
     };
 
     return (
-        <header className="glass-panel rounded-3xl p-6 mb-8 flex flex-col gap-6">
-            <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-                <div>
-                    <h1 className="text-4xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-white to-white/70">
-                        WCAG Liquid Checklist
-                    </h1>
-                    <p className="text-white/80 mt-1">
-                        {language === 'en' ? 'Accessible Web Design Guide' : 'Gids voor Toegankelijk Webdesign'}
-                    </p>
+        <header className="sticky top-4 z-50 mb-8 px-6 py-4 rounded-2xl mx-4 border border-white/20 shadow-lg backdrop-blur-xl bg-[#273C50]/95">
+            <div className="flex flex-col gap-6 md:flex-row md:items-center md:justify-between mb-6">
+                <div className="flex flex-col items-start gap-4">
+                    <img src="/logo.png" alt="MADE Marketing Logo" className="h-16 md:h-20 w-auto object-contain" />
+                    <div>
+                        <h1 className="text-2xl font-bold text-white">
+                            MADE Marketing WCAG Checklist
+                        </h1>
+                        <p className="text-white/80 text-sm">
+                            {language === 'en' ? 'Accessible Web Design Guide' : 'Gids voor Toegankelijk Webdesign'}
+                        </p>
+                    </div>
                 </div>
 
                 <div className="flex flex-col items-end gap-3 w-full md:w-auto">
@@ -147,7 +157,7 @@ export const Header: React.FC = () => {
                             </button>
 
                             {showExportMenu && (
-                                <div className="absolute right-0 top-12 glass-panel rounded-xl p-2 flex flex-col gap-1 min-w-[160px] z-50">
+                                <div className="absolute right-0 top-12 rounded-xl p-2 flex flex-col gap-1 min-w-[160px] z-50 border border-white/20 shadow-lg backdrop-blur-xl bg-[#273C50]/95">
                                     <button
                                         onClick={handleExportJSON}
                                         className="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-white/10 text-sm text-left transition-colors"
@@ -177,7 +187,7 @@ export const Header: React.FC = () => {
                 </div>
             </div>
 
-            <div className="flex flex-col md:flex-row gap-6 justify-between">
+            <div className="flex flex-col md:flex-row gap-6 justify-between border-t border-white/10 pt-4">
                 {/* Levels */}
                 <div className="flex flex-col gap-2">
                     <span className="text-xs uppercase tracking-wider text-white/60 font-semibold">

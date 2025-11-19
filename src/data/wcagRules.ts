@@ -1433,6 +1433,7 @@ export const wcagRules: WCAGRule[] = [
                 en: 'Let users check and confirm their data before submitting ANY form.',
                 nl: 'Laat gebruikers hun gegevens controleren en bevestigen voordat ze ELK formulier verzenden.'
             }
-        }
+        },
+        url: 'https://www.w3.org/WAI/WCAG21/Understanding/error-prevention-all.html'
     }
 ];

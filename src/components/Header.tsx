@@ -16,6 +16,31 @@ export const Header: React.FC = () => {
     } = useAppStore();
 
     const [showExportMenu, setShowExportMenu] = useState(false);
+    const [isScrolled, setIsScrolled] = useState(false);
+    const [isVisible, setIsVisible] = useState(true);
+    const [lastScrollY, setLastScrollY] = useState(0);
+    const [showFilters, setShowFilters] = useState(false);
+
+    React.useEffect(() => {
+        const handleScroll = () => {
+            const currentScrollY = window.scrollY;
+
+            // Determine if scrolled for shrinking effect
+            setIsScrolled(currentScrollY > 20);
+
+            // Determine visibility (hide on scroll down, show on scroll up)
+            if (currentScrollY > lastScrollY && currentScrollY > 100) {
+                setIsVisible(false);
+            } else {
+                setIsVisible(true);
+            }
+
+            setLastScrollY(currentScrollY);
+        };
+
+        window.addEventListener('scroll', handleScroll, { passive: true });
+        return () => window.removeEventListener('scroll', handleScroll);
+    }, [lastScrollY]);
 
     const levels: WCAGLevel[] = ['A', 'AA', 'AAA'];
     const roles: WCAGRole[] = ['Design', 'Develop', 'Content'];
@@ -122,17 +147,38 @@ export const Header: React.FC = () => {
     };
 
     return (
-        <header className="sticky top-2 md:top-4 z-50 mb-4 md:mb-8 px-3 md:px-6 py-3 md:py-4 rounded-xl md:rounded-2xl mx-2 md:mx-4 border border-white/20 shadow-lg backdrop-blur-xl bg-[#273C50]/95">
-            <div className="flex flex-col gap-4 md:gap-6 md:flex-row md:items-center md:justify-between mb-4 md:mb-6">
+        <header
+            className={clsx(
+                "sticky top-0 z-50 px-3 md:px-6 rounded-b-2xl mx-0 md:mx-4 border-b border-x border-white/20 shadow-lg backdrop-blur-xl bg-[#273C50]/95 transition-all duration-300 ease-in-out",
+                isVisible ? "translate-y-0" : "-translate-y-full",
+                isScrolled ? "py-2 mb-4" : "py-4 mb-8 mt-4 rounded-t-2xl border-t"
+            )}
+        >
+            <div className={clsx(
+                "flex flex-col md:flex-row md:items-center md:justify-between transition-all duration-300",
+                isScrolled ? "gap-2 mb-2" : "gap-4 md:gap-6 mb-4 md:mb-6"
+            )}>
                 <div className="flex flex-col items-start gap-2 md:gap-4">
-                    <img src="/logo.png" alt="MADE Marketing Logo" className="h-10 md:h-20 w-auto object-contain" />
-                    <div>
-                        <h1 className="text-lg md:text-2xl font-bold text-white">
+                    <img
+                        src="/logo.png"
+                        alt="MADE Marketing Logo"
+                        className={clsx(
+                            "w-auto object-contain transition-all duration-300",
+                            isScrolled ? "h-8 md:h-12" : "h-10 md:h-20"
+                        )}
+                    />
+                    <div className={clsx("transition-all duration-300", isScrolled && "hidden md:block")}>
+                        <h1 className={clsx(
+                            "font-bold text-white transition-all duration-300",
+                            isScrolled ? "text-base md:text-xl" : "text-lg md:text-2xl"
+                        )}>
                             MADE Marketing WCAG Checklist
                         </h1>
-                        <p className="text-white/80 text-xs md:text-sm">
-                            {language === 'en' ? 'Accessible Web Design Guide' : 'Gids voor Toegankelijk Webdesign'}
-                        </p>
+                        {!isScrolled && (
+                            <p className="text-white/80 text-xs md:text-sm">
+                                {language === 'en' ? 'Accessible Web Design Guide' : 'Gids voor Toegankelijk Webdesign'}
+                            </p>
+                        )}
                     </div>
                 </div>
 
@@ -182,51 +228,69 @@ export const Header: React.FC = () => {
                         placeholder={language === 'en' ? 'Website Name (e.g. my-site.com)' : 'Website Naam (bv. mijn-site.nl)'}
                         value={websiteName}
                         onChange={(e) => setWebsiteName(e.target.value)}
-                        className="glass-button w-full md:w-64 px-4 py-2 rounded-xl text-sm placeholder:text-white/40 focus:outline-none focus:bg-white/10 transition-all"
+                        className={clsx(
+                            "glass-button w-full md:w-64 px-4 rounded-xl text-sm placeholder:text-white/40 focus:outline-none focus:bg-white/10 transition-all",
+                            isScrolled ? "py-1.5" : "py-2"
+                        )}
                     />
                 </div>
             </div>
 
-            <div className="flex flex-col md:flex-row gap-6 justify-between border-t border-white/10 pt-4">
-                {/* Levels */}
-                <div className="flex flex-col gap-2">
-                    <span className="text-xs uppercase tracking-wider text-white/60 font-semibold">
-                        {language === 'en' ? 'Levels' : 'Niveaus'}
-                    </span>
-                    <div className="flex gap-2">
-                        {levels.map((level) => (
-                            <button
-                                key={level}
-                                onClick={() => toggleLevel(level)}
-                                className={clsx(
-                                    'glass-button rounded-xl px-4 py-2 text-sm font-medium transition-all',
-                                    activeLevels.includes(level) ? 'active bg-white/40' : 'opacity-60 hover:opacity-100'
-                                )}
-                            >
-                                {level}
-                            </button>
-                        ))}
-                    </div>
-                </div>
+            <div className="border-t border-white/10 pt-2">
+                <button
+                    onClick={() => setShowFilters(!showFilters)}
+                    className="flex items-center gap-2 text-white/60 hover:text-white text-sm font-medium w-full justify-center md:justify-start py-1"
+                >
+                    <span>{language === 'en' ? 'Edit View (Filters)' : 'Bewerk Weergave (Filters)'}</span>
+                    <ChevronDown size={16} className={clsx("transition-transform", showFilters ? "rotate-180" : "")} />
+                </button>
 
-                {/* Roles */}
-                <div className="flex flex-col gap-2">
-                    <span className="text-xs uppercase tracking-wider text-white/60 font-semibold">
-                        {language === 'en' ? 'Roles' : 'Rollen'}
-                    </span>
-                    <div className="flex gap-2 flex-wrap">
-                        {roles.map((role) => (
-                            <button
-                                key={role}
-                                onClick={() => toggleRole(role)}
-                                className={clsx(
-                                    'glass-button rounded-xl px-4 py-2 text-sm font-medium transition-all',
-                                    activeRoles.includes(role) ? 'active bg-white/40' : 'opacity-60 hover:opacity-100'
-                                )}
-                            >
-                                {role}
-                            </button>
-                        ))}
+                <div className={clsx(
+                    "grid transition-all duration-300 ease-in-out overflow-hidden",
+                    showFilters ? "grid-rows-[1fr] opacity-100 mt-4" : "grid-rows-[0fr] opacity-0"
+                )}>
+                    <div className="min-h-0 flex flex-col md:flex-row gap-6 justify-between pb-2">
+                        {/* Levels */}
+                        <div className="flex flex-col gap-2">
+                            <span className="text-xs uppercase tracking-wider text-white/60 font-semibold">
+                                {language === 'en' ? 'Levels' : 'Niveaus'}
+                            </span>
+                            <div className="flex gap-2">
+                                {levels.map((level) => (
+                                    <button
+                                        key={level}
+                                        onClick={() => toggleLevel(level)}
+                                        className={clsx(
+                                            'glass-button rounded-xl px-4 py-2 text-sm font-medium transition-all',
+                                            activeLevels.includes(level) ? 'active bg-white/40' : 'opacity-60 hover:opacity-100'
+                                        )}
+                                    >
+                                        {level}
+                                    </button>
+                                ))}
+                            </div>
+                        </div>
+
+                        {/* Roles */}
+                        <div className="flex flex-col gap-2">
+                            <span className="text-xs uppercase tracking-wider text-white/60 font-semibold">
+                                {language === 'en' ? 'Roles' : 'Rollen'}
+                            </span>
+                            <div className="flex gap-2 flex-wrap">
+                                {roles.map((role) => (
+                                    <button
+                                        key={role}
+                                        onClick={() => toggleRole(role)}
+                                        className={clsx(
+                                            'glass-button rounded-xl px-4 py-2 text-sm font-medium transition-all',
+                                            activeRoles.includes(role) ? 'active bg-white/40' : 'opacity-60 hover:opacity-100'
+                                        )}
+                                    >
+                                        {role}
+                                    </button>
+                                ))}
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>

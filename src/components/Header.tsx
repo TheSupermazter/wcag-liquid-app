@@ -122,15 +122,15 @@ export const Header: React.FC = () => {
     };
 
     return (
-        <header className="sticky top-4 z-50 mb-8 px-6 py-4 rounded-2xl mx-4 border border-white/20 shadow-lg backdrop-blur-xl bg-[#273C50]/95">
-            <div className="flex flex-col gap-6 md:flex-row md:items-center md:justify-between mb-6">
-                <div className="flex flex-col items-start gap-4">
-                    <img src="/logo.png" alt="MADE Marketing Logo" className="h-16 md:h-20 w-auto object-contain" />
+        <header className="sticky top-2 md:top-4 z-50 mb-4 md:mb-8 px-3 md:px-6 py-3 md:py-4 rounded-xl md:rounded-2xl mx-2 md:mx-4 border border-white/20 shadow-lg backdrop-blur-xl bg-[#273C50]/95">
+            <div className="flex flex-col gap-4 md:gap-6 md:flex-row md:items-center md:justify-between mb-4 md:mb-6">
+                <div className="flex flex-col items-start gap-2 md:gap-4">
+                    <img src="/logo.png" alt="MADE Marketing Logo" className="h-10 md:h-20 w-auto object-contain" />
                     <div>
-                        <h1 className="text-2xl font-bold text-white">
+                        <h1 className="text-lg md:text-2xl font-bold text-white">
                             MADE Marketing WCAG Checklist
                         </h1>
-                        <p className="text-white/80 text-sm">
+                        <p className="text-white/80 text-xs md:text-sm">
                             {language === 'en' ? 'Accessible Web Design Guide' : 'Gids voor Toegankelijk Webdesign'}
                         </p>
                     </div>

@@ -45,14 +45,14 @@ export const ChecklistItem: React.FC<ChecklistItemProps> = ({ rule }) => {
                 </div>
 
                 {/* Content */}
-                <div className="flex-1">
-                    <div className="flex justify-between items-start">
-                        <div>
-                            <div className="flex items-center gap-2 mb-1">
-                                <span className="text-xs font-bold px-2 py-0.5 rounded bg-white/20 text-white/90">
+                <div className="flex-1 min-w-0">
+                    <div className="flex justify-between items-start gap-3">
+                        <div className="min-w-0">
+                            <div className="flex flex-wrap items-center gap-2 mb-1">
+                                <span className="text-xs font-bold px-2 py-0.5 rounded bg-white/20 text-white/90 whitespace-nowrap">
                                     {rule.refId} • {rule.level}
                                 </span>
-                                <div className="flex gap-1">
+                                <div className="flex flex-wrap gap-1">
                                     {rule.roles.map(role => (
                                         <span key={role} className="text-[10px] uppercase tracking-wide opacity-60 border border-white/20 px-1.5 rounded">
                                             {role}
@@ -61,7 +61,7 @@ export const ChecklistItem: React.FC<ChecklistItemProps> = ({ rule }) => {
                                 </div>
                             </div>
                             <h3 className={clsx(
-                                "text-lg font-medium transition-all",
+                                "text-lg font-medium transition-all break-words",
                                 isCompleted ? "text-white/50 line-through" : "text-white"
                             )}>
                                 {rule.title[language]}
@@ -70,7 +70,7 @@ export const ChecklistItem: React.FC<ChecklistItemProps> = ({ rule }) => {
 
                         <button
                             onClick={toggleExpand}
-                            className="p-2 hover:bg-white/10 rounded-full transition-colors"
+                            className="p-2 hover:bg-white/10 rounded-full transition-colors shrink-0 mt-1"
                         >
                             {isExpanded ? <ChevronUp size={20} /> : <Info size={20} color="#FF4459" />}
                         </button>
